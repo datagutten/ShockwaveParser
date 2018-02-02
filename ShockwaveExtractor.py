@@ -140,7 +140,7 @@ def main(argv):
 
 		if extract:
 
-			dirName = os.path.basename( rd.fileName )
+			dirName = os.path.basename( rd.fileName ).upper()
 
 			basePath = "cst_out_new/" + dirName
 
