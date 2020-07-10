@@ -202,7 +202,7 @@ class ShockwaveParser:
 		self.forceLittle = False
 
 	def log(self, t):
-		print(t)
+		print(t.encode('iso8859-1'))
 
 	def readByte(self, big):
 		return struct.unpack( ('b' if big else '>b'), self.f.read(1) )[0]
@@ -221,9 +221,9 @@ class ShockwaveParser:
 
 	def readString(self, l, big):
 		if big:
-			return self.f.read(l).decode("ansi")[::-1]
+			return self.f.read(l).decode("iso8859-1")[::-1]
 		else:
-			return self.f.read(l).decode("ansi")
+			return self.f.read(l).decode("iso8859-1")
 
 	def readLenString(self, big):
 
@@ -233,7 +233,7 @@ class ShockwaveParser:
 		if l == 0:
 			txt = ""
 		else:
-			txt = self.f.read(l).decode("ansi")
+			txt = self.f.read(l).decode("iso8859-1")
 
 		if self.BigEndian:
 			self.f.seek(1, 1)
@@ -1250,7 +1250,7 @@ class ShockwaveParser:
 							if not lib in self.textContents:
 								self.textContents[lib] = {}
 
-							self.textContents[lib][num] = textContent.decode('ansi')
+							self.textContents[lib][num] = textContent.decode('iso8859-1')
 
 
 					if entry['castType'] == CastType.SOUND.value:
@@ -1466,7 +1466,7 @@ class ShockwaveParser:
 										dr.point( (x, y), bitmapValues[y][x] )
 									
 							
-							im.save( "C:/temp/swp.bmp", "BMP")
+							im.save( "/tmp/swp.bmp", "BMP")
 							# im.save( outPath + "/" + outFileName + ".bmp", "BMP")
 
 							# regs = str(entry["imageRegX"]) + "x" + str(entry["imageRegY"])
@@ -1474,11 +1474,11 @@ class ShockwaveParser:
 							#if entry["imageWidth"] > 390 or entry["imageHeight"] > 390:
 							if self.baseName in OPAQUE and num in OPAQUE[self.baseName]:
 								print("Opaque!")
-								call("magick convert C:/temp/swp.bmp " + outPath + "/" + outFileName + ".png")
+								call(["convert","/tmp/swp.bmp", outPath + "/" + outFileName + ".png"])
 								# call("magick convert " + outPath + "/" + outFileName + ".bmp " + outPath + "/" + outFileName + ".png")
 							else:
 								print("Translucent!")
-								call("magick convert C:/temp/swp.bmp -transparent \"#FFFFFF\" " + outPath + "/" + outFileName + ".png")
+								call(["convert","/tmp/swp.bmp","-transparent","#FFFFFF", outPath + "/" + outFileName + ".png"])
 								# call("magick convert " + outPath + "/" + outFileName + ".bmp -transparent \"#FFFFFF\" " + outPath + "/" + outFileName + ".png")
 
 
