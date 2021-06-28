@@ -484,6 +484,8 @@ class ShockwaveParser:
 					if linkedEntry['type'] == "CLUT":
 						castMember['paletteData'] = linkedEntry['paletteData']
 
+					if linkedEntry['type'] == 'RTE0':  #  and 'data' in linkedEntry:
+						castMember['font'] = linkedEntry['font']
 
 				e['members'][ num ] = castMember		
 
@@ -973,6 +975,23 @@ class ShockwaveParser:
 
 			data['paletteData'].reverse()
 
+		if entry['type'] == 'RTE0':
+			check = b'\x2c\x0f'
+
+			for p in range(0, entry['dataLength']):
+				chars = self.f.read(2)
+				pos = self.f.tell()
+				if(chars == check):
+					break
+
+			string = b''
+			char = b'\x01'
+			while char != b'\x00' and pos < entry['dataOffset'] + entry['dataLength']:
+				char = self.f.read(1)
+				pos = self.f.tell()
+				string += char
+			data['font'] = string[:-1].decode('iso8859-1')
+
 
 		# bitmap
 		# if entry['type'] == 'BITD':
@@ -1221,7 +1240,27 @@ class ShockwaveParser:
 
 						print("SCRIPT")
 
-					if entry['castType'] == CastType.FIELD.value:
+					if entry['castType'] == CastType.FIELD.value or entry['castType'] == CastType.TEXT.value:
+						if le['type'] == 'RTE0':
+							printable = False
+							string = b''
+
+							self.f.seek(le['dataOffset'], 0)
+							for p in range(0, le['dataLength']):
+								char = self.f.read(1)
+
+								if ord(char) == 0x2C:
+									printable = True
+								elif printable:
+									if ord(char) == 0x03:
+										break
+									else:
+										string += char
+
+							# print('Write', textContent, 'to', fileName)
+							txts = open(os.path.join(outPath, outFileName + ".txt"), "wb")
+							txts.write(string)
+							txts.close()
 
 						if le["type"] == "STXT":
 
