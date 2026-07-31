@@ -4,8 +4,8 @@ version = "0.1.0"
 description = ""
 requires-python = ">=3.11"
 dependencies = [
-    "standard-aifc (>=3.13.0,<4.0.0)",
-    "standard-sunau (>=3.13.0,<4.0.0)"
+    "standard-aifc (>=3.13.0,<4.0.0); python_version >= '3.13'",
+    "standard-sunau (>=3.13.0,<4.0.0); python_version >= '3.13'"
 ]
 
 
