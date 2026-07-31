@@ -1,7 +1,7 @@
 [project]
 name = "shockwaveparser"
 version = "0.1.0"
-description = ""
+description = "Parse and extract data from Shockwave files"
 requires-python = ">=3.8"
 dependencies = [
     "standard-aifc (>=3.13.0,<4.0.0); python_version >= '3.13'",
