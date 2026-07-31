@@ -5,7 +5,7 @@ import os, sys, getopt
 
 import json
 
-from ShockwaveParser import ShockwaveParser, CastType
+from .ShockwaveParser import ShockwaveParser, CastType
 
 def main(argv):
 	
@@ -253,6 +253,3 @@ def main(argv):
 				fFilesOut = open( basePath + "/pack.json", "w")
 				fFilesOut.write( json.dumps( pack_files ) )
 				fFilesOut.close()
-
-if __name__ == "__main__":
-	main(sys.argv[1:])
