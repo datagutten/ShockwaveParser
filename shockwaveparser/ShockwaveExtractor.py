@@ -1,17 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import os, sys, getopt, struct
+import os, sys, getopt
 
 import json
 
 from ShockwaveParser import ShockwaveParser, CastType
-
-from PyTexturePacker import Packer
-
-from PyTexturePacker import ImageRect
-
-from PyTexturePacker import Utils as PyTexturePackerUtils
 
 def main(argv):
 	
@@ -198,127 +192,6 @@ def main(argv):
 							if l['members'][c]['soundSampleRate'] > highestSampleRate:
 								highestSampleRate = l['members'][c]['soundSampleRate']
 
-
-					'''
-					# audio sprite
-					audioSpriteCall = "audiosprite.cmd --output " + fileOutPath + "/audio --path \"\" --samplerate " + str(highestSampleRate) + " --bitrate 64 --export ogg " + fileOutPath + "/*.wav"
-					
-					call(audioSpriteCall)
-
-					pack_files[ dirName ].append({
-						"type": "audiosprite",
-						"lib": l['name'],
-						"key": dirName + "_" + l['name'] + "_audio",
-						"urls": assetPath + "/audio.ogg",
-						"jsonURL": assetPath + "/audio.json",
-						"jsonData": None
-					})
-					'''
-
-				# sprite sheet
-				
-				'''
-				print("Make sprite sheets")
-
-				atlas_list = None
-			
-				if len(imageData) > 0:
-					
-					packer = Packer.create( max_width=2048, max_height=2048, bg_color=0x00ffffff, trim_mode=1, enable_rotated=False )
-					
-					image_rect_list = []
-					for d in imageData:
-						image_rect = ImageRect.ImageRect( d[2] )
-						image_rect.castLibrary = d[0]
-						image_rect.castSlot = d[1]
-						image_rect_list.append(image_rect)
-
-					atlas_list = packer._pack(image_rect_list)
-
-					for i, atlas in enumerate(atlas_list):
-
-						print("Pack image " + str(i))
-
-						atlasName = dirName + "_sprites" + str(i)
-
-						fSprites = {}
-						fSprites['frames'] = {}
-
-						packed_image = atlas.dump_image(packer.bg_color)
-
-						PyTexturePackerUtils.save_image(packed_image, basePath + "/sprites" + str(i) + ".png")
-						
-						for image_rect in atlas.image_rect_list:
-							width, height = (image_rect.width, image_rect.height) if not image_rect.rotated \
-								else (image_rect.height, image_rect.width)
-
-							center_offset = (0, 0)
-							if image_rect.trimmed:
-								center_offset = (image_rect.source_box[0] + width / 2. - image_rect.source_size[0] / 2.,
-												 - (image_rect.source_box[1] + height / 2. - image_rect.source_size[1] / 2.))
-
-							
-							mem = rd.getCastMember( image_rect.castLibrary, image_rect.castSlot )
-
-							''
-							m["sheetN"] = i
-							m["sheetX"] = image_rect.x
-							m["sheetY"] = image_rect.y
-							m["sheetW"] = width
-							m["sheetH"] = height
-							m["sheetO"] = center_offset
-							m["sheetR"] = bool(image_rect.rotated)
-							''
-
-							mem["atlas"] = atlasName
-
-							m = {}
-							# m['filename'] = str(image_rect.castSlot)
-							m['frame'] = { "x": image_rect.x, "y": image_rect.y, "w": width, "h": height }
-							m['rotated'] = bool(image_rect.rotated)
-							m['trimmed'] = False
-							m['spriteSourceSize'] = { "x": 0, "y": 0, "w": mem['imageWidth'], "h": mem['imageHeight'] }
-							m['sourceSize'] = { "w": mem['imageWidth'], "h": mem['imageHeight'] }
-
-							# m['cLib'] = image_rect.castLibrary
-							# m['cSlot'] = image_rect.castSlot
-
-							# m['name'] = mem['name']
-
-							# m['offset'] = { "x": mem['imageRegX'], "y": mem['imageRegY'] }
-							# m['anchor'] = {
-							# 	"x": mem['imageRegX'] / mem['imageWidth'],
-							# 	"y": mem['imageRegY'] / mem['imageHeight']
-							# }
-
-							fSprites['frames'][ image_rect.castLibrary + "." + str(image_rect.castSlot) ] = m
-
-
-						fSprites['meta'] = {
-							"size": {"w": packed_image.size[0], "h": packed_image.size[1] },
-							"image": "sprites" + str(i) + ".png",
-							"scale": "1",
-							"dir": dirName
-						}
-						
-						fSpritesOut = open( basePath + "/sprites" + str(i) + ".json", "w")
-						fSpritesOut.write( json.dumps( fSprites ) )
-						fSpritesOut.close()
-
-
-						pack_files[ dirName ].append({
-							"type": "atlasJSONHash",
-							"key": atlasName,
-							"textureURL": "assets/" + dirName + "/sprites" + str(i) + ".png",
-							"atlasURL": "assets/" + dirName + "/sprites" + str(i) + ".json",
-							"atlasData": None
-						})
-
-				# fTextOut = open( basePath + "/text.json", "w")
-				# fTextOut.write( json.dumps( rd.textContents ) )
-				# fTextOut.close()
-				'''
-
 				# json output
 				
 				print("Output metadata JSON")
@@ -380,14 +253,6 @@ def main(argv):
 				fFilesOut = open( basePath + "/pack.json", "w")
 				fFilesOut.write( json.dumps( pack_files ) )
 				fFilesOut.close()
-
-
-
-			# if packImages:
-			# 	
-			# 	packer = Packer.create(max_width=2048, max_height=2048, bg_color=0xffffff00)
-			# 	packer.pack( rdPath + "/Internal/", rdPath + "/sprites%d")
-	
 
 if __name__ == "__main__":
 	main(sys.argv[1:])
